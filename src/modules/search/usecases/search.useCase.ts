@@ -7,41 +7,45 @@ export class SearchUseCase {
         @Inject('SEARCH_SERVICE')
         private readonly searchService: SearchService,
         private readonly logger: Logger
-    ) { }
-    async execute(data: SearchQuotationDto): Promise<any> {
-        const { checkin, checkout } = data
+    ) {}
+
+    async execute({ checkin, checkout }: SearchQuotationDto): Promise<any> {
         this.logger.verbose(`Crawler search start`)
         this.logger.verbose(`check in date: ${checkin} and check out date: ${checkout}`)
-        try {
-            this.validateDate(checkin, checkout)
-            const convertedCheckIn = this.convertDateToURLenconde(checkin)
-            const convertedCheckOut = this.convertDateToURLenconde(checkout)
-            return await this.searchService.findQuotation({ checkin: convertedCheckIn, checkout: convertedCheckOut })
-        } catch (error) {
-            this.logger.error(error)
-        }
+
+        this.validateDate(checkin, checkout)
+
+        const convertedCheckIn = this.convertDateToURLenconde(checkin)
+        const convertedCheckOut = this.convertDateToURLenconde(checkout)
+
+        return await this.searchService.scrappingPage({ checkin: convertedCheckIn, checkout: convertedCheckOut })
     }
 
-    normalizeDate(date: string): Date {
+    private normalizeDate(date: string): Date {
         const normalizedDate = new Date(date)
+
         if (isNaN(normalizedDate.getTime())) {
             throw new ConflictException(`Invalid Date: ${date} on body`)
         }
+
         normalizedDate.setHours(0, 0, 0, 0)
+
         return normalizedDate
     }
 
-    validateDate(checkin: string, checkout: string): void {
+    private validateDate(checkin: string, checkout: string): void {
         const normalizedCheckIn = this.normalizeDate(checkin)
         const normalizedCheckOut = this.normalizeDate(checkout)
+
         if (normalizedCheckIn >= normalizedCheckOut) {
             throw new BadRequestException(`The checkout date: ${checkout} is greather than or equal checkin date: ${checkin}`)
         }
     }
 
-    convertDateToURLenconde(data: string) {
+    private convertDateToURLenconde(data: string) {
         const date = this.normalizeDate(data)
             .toLocaleDateString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric' })
+
         return encodeURIComponent(date)
     }
 }
