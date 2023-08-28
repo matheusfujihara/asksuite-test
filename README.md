@@ -68,19 +68,22 @@ To achieve this result you may:
 * Retrieve the needed information to assemble the payload using web crawling methods
 
 ## Environment
-* Node 10+
-* Dotenv setup
+* NestJs 10.1.15
 
-Already installed: `express` `puppeteer` `dotenv`
+Already installed: `NestJs` `puppeteer`
 
 **_Feel free to add any lib you find relevant to your test._**
 
 
 ## Running
 * Install dependencies with: `npm install`
-* Run as dev: `npm run dev`
+* Run as dev: `npm run start`
+* Add .env on root using .env.example
 
 Default port is set to `3000`
+
+## Documentation
+*Documentation on `/swagger/api`
 
 ## Assets
 * Crawl URL sample (change dates): 
