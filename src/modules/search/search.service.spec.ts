@@ -51,17 +51,16 @@ describe('SearchService', () => {
       expect(result).toEqual(createScrappingPage)
     })
 
-    it('should return NotFound', async () => {
+    it('should return NotFound when does not have hotel', async () => {
       const checkin = '2022-09-03'
       const checkout = '2022-09-07'
 
-      jest.spyOn(searchService, 'scrappingPage').mockImplementationOnce(() => {
-        throw new NotFoundException(`Room unavaiable in period '${checkin}' to '${checkout}'`)
-      })
+      jest.spyOn(searchService, 'scrappingPage').mockReturnValue(new Promise((resolve, reject) => reject(new NotFoundException())))
 
-      expect(
-        await searchService.crawlerQuotation({ checkin, checkout })
-      ).rejects.toThrowError(NotFoundException)
+      const error = searchService.crawlerQuotation({ checkin, checkout })
+
+      await expect(error).rejects.toBeInstanceOf(NotFoundException)
+      await expect(error).rejects.toThrow(NotFoundException)
     })
   })
 
