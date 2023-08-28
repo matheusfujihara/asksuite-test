@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SearchModule } from './modules/search/search.module';
-import { CrawlerModule } from './modules/crawler/crawler.module';
 
 @Module({
   imports: [
@@ -9,7 +8,6 @@ import { CrawlerModule } from './modules/crawler/crawler.module';
       isGlobal: true,
     }),
     SearchModule,
-    CrawlerModule,
   ],
   controllers: [],
   providers: [],
