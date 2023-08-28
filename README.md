@@ -83,7 +83,8 @@ Already installed: `NestJs` `puppeteer`
 Default port is set to `3000`
 
 ## Documentation
-*Documentation on `/swagger/api`
+* Documentation on `/swagger/api`
+* Add on root `[AskSuite] - API_crawler.postman_collection.json` file to use in postman
 
 ## Assets
 * Crawl URL sample (change dates): 
