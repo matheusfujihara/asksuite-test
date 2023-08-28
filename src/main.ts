@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import env from './config/env'
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   process.env.TZ = 'UTC';
@@ -15,13 +15,16 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger/api', app, document);
+  
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT') || 3000;
 
-  await app.listen(env.port);
+  await app.listen(port);
 
   const { address } = app.getHttpServer().address();
 
-  console.log(`Application running on ${address}:${env.port}`);
-  console.log(`Swagger running on ${address}:${env.port}/swagger/api`);
+  console.log(`Application running on ${address}:${port}`);
+  console.log(`Swagger running on ${address}:${port}/swagger/api`);
 
 }
 bootstrap();

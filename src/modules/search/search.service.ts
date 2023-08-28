@@ -1,14 +1,15 @@
 import puppeteer from 'puppeteer';
+import { ConfigService } from '@nestjs/config';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { QuotationPageDto } from './dto/quotation-page.dto';
 import { SearchQuotationDto } from './dto/search-quotation.dto';
 import { DateUtil } from '../../utils/dateUtil';
-import env from "../../config/env"
 
 @Injectable()
 export class SearchService {
   constructor(
-    private readonly logger: Logger
+    private readonly logger: Logger,
+    private readonly configService: ConfigService
   ) { }
 
   async crawlerQuotation({ checkin, checkout }: SearchQuotationDto): Promise<QuotationPageDto[]> {
@@ -74,7 +75,7 @@ export class SearchService {
 
     this.logger.verbose(`Creating puppeteer browser`)
 
-    const URL = env.base_url.replace('$CHECKIN', checkin).replace('$CHECKOUT', checkout)
+    const URL = this.configService.get<string>('BASE_URL').replace('$CHECKIN', checkin).replace('$CHECKOUT', checkout)
     const browser = await puppeteer.launch({
       headless: true
     })
