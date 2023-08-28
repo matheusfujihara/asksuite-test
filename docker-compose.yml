@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  api:
+    container_name: asksuite-api
+    build: .
+    command: npm start
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dist:/usr/src/app/dist
+    environment:
+      PORT: 3000
+      BASE_URL: https://pratagy.letsbook.com.br/D/Reserva?checkin=$CHECKIN&checkout=$CHECKOUT&cidade=&hotel=12&adultos=2&criancas=&destino=Pratagy+Beach+Resort+All+Inclusive&promocode=&tarifa=&mesCalendario=6%2F14%2F2022

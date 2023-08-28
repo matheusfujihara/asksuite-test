@@ -1,21 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Inject, Logger } from '@nestjs/common';
 import { SearchQuotationDto } from './dto/search-quotation.dto';
-import { SearchUseCase } from './usecases/search.useCase';
+import { SearchService } from './search.service';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Search')
 @Controller('search')
 export class SearchController {
   constructor(
-    private readonly searchUseCase: SearchUseCase
+    @Inject('SEARCH_SERVICE')
+    private readonly searchService: SearchService,
+    private readonly logger: Logger
   ) { }
 
+  @ApiOperation({ summary: 'Returns Crawler Search by period' })
+  @ApiBody({ type: SearchQuotationDto })
+  @ApiResponse({ status: 201, description: 'Success' })
   @Post()
   @HttpCode(200)
-  async create(@Body() searchQuotationDto: SearchQuotationDto) {
-    return await this.searchUseCase.execute(searchQuotationDto);
-  }
-
-  @Get()
-  async find(@Body() searchQuotationDto: SearchQuotationDto) {
-    return 'find success'
+  async crawlerSearch(@Body() searchQuotationDto: SearchQuotationDto) {
+    this.logger.verbose(`Starting crawlerSearch on ${SearchController.name}`)
+    
+    const result = await this.searchService.crawlerQuotation(searchQuotationDto)
+    
+    return result
   }
 }

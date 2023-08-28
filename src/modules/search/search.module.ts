@@ -1,7 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchController } from './search.controller';
-import { SearchUseCase } from './usecases/search.useCase';
 
 @Module({
   controllers: [SearchController],
@@ -10,7 +9,6 @@ import { SearchUseCase } from './usecases/search.useCase';
       provide: 'SEARCH_SERVICE',
       useClass: SearchService,
     },
-    SearchUseCase,
     Logger
   ]
 })
